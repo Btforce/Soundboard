@@ -20,12 +20,30 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
     private Button a;
     private Button b;
     private Button b_flat;
+    private Button c;
+    private Button c_sharp;
+    private Button d;
+    private Button d_sharp;
+    private Button e;
+    private Button f;
+    private Button f_sharp;
+    private Button g;
+    private Button g_sharp;
     private SoundPool soundPool;
     private int soundID;
     boolean loaded = false;
     private int aNote;
     private int bNote;
     private int bFlatNote;
+    private int cNote;
+    private int cSharpNote;
+    private int dNote;
+    private int dSharpNote;
+    private int eNote;
+    private int fNote;
+    private int fSharpNote;
+    private int gNote;
+    private int gSharpNote;
     private Map<Integer, Integer> noteMap;
 
     @Override
@@ -51,11 +69,31 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
         aNote = soundPool.load(this, R.raw.scalea, 1);
         bNote = soundPool.load(this, R.raw.scaleb, 1);
         bFlatNote = soundPool.load(this, R.raw.scalebb, 1);
+        cNote = soundPool.load(this, R.raw.scalec, 1);
+        cSharpNote = soundPool.load(this, R.raw.scalecs, 1);
+        dNote = soundPool.load(this, R.raw.scaled, 1);
+        dSharpNote = soundPool.load(this, R.raw.scaleds, 1);
+        eNote = soundPool.load(this, R.raw.scalee, 1);
+        fNote = soundPool.load(this, R.raw.scalef, 1);
+        fSharpNote = soundPool.load(this, R.raw.scalefs, 1);
+        gNote = soundPool.load(this, R.raw.scaleg, 1);
+        gSharpNote = soundPool.load(this, R.raw.scalegs, 1);
+
 
         noteMap = new HashMap<>();
         noteMap.put(a.getId(), aNote);
         noteMap.put(b_flat.getId(), bFlatNote);
         noteMap.put(b.getId(), bNote);
+        noteMap.put(c.getId(), cNote);
+        noteMap.put(c_sharp.getId(), cSharpNote);
+        noteMap.put(d.getId(), dNote);
+        noteMap.put(d_sharp.getId(), dSharpNote);
+        noteMap.put(e.getId(), eNote);
+        noteMap.put(f.getId(), fNote);
+        noteMap.put(f_sharp.getId(), fSharpNote);
+        noteMap.put(g.getId(), gNote);
+        noteMap.put(g_sharp.getId(), gSharpNote);
+
     }
 
     private void setListeners() {
@@ -113,6 +151,15 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
         a.setOnClickListener(keyboardListener);
         b.setOnClickListener(keyboardListener);
         b_flat.setOnClickListener(keyboardListener);
+        c.setOnClickListener(keyboardListener);
+        c_sharp.setOnClickListener(keyboardListener);
+        d.setOnClickListener(keyboardListener);
+        d_sharp.setOnClickListener(keyboardListener);
+        e.setOnClickListener(keyboardListener);
+        f.setOnClickListener(keyboardListener);
+        f_sharp.setOnClickListener(keyboardListener);
+        g.setOnClickListener(keyboardListener);
+        g_sharp.setOnClickListener(keyboardListener);
 
         a.setOnClickListener(this);
         b.setOnClickListener(this);
@@ -131,6 +178,15 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
         a = findViewById(R.id.button_main_A);
         b_flat = findViewById(R.id.button_main_Bflat);
         b = findViewById(R.id.button_main_B);
+        c = findViewById(R.id.button_main_C);
+        c_sharp = findViewById(R.id.button_main_Csharp);
+        d = findViewById(R.id.button_main_D);
+        d_sharp = findViewById(R.id.button_main_Dsharp);
+        e = findViewById(R.id.button_main_E);
+        f = findViewById(R.id.button_main_F);
+        f_sharp = findViewById(R.id.button_main_Fsharp);
+        g = findViewById(R.id.button_main_G);
+        g_sharp = findViewById(R.id.button_main_Gsharp);
     }
 
     @Override
