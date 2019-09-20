@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">Soundboard</string>
     <string name="A_Note">A</string>
-    <String name="Bb_Note">Bb</String>
-    <String name="B_Note">B</String>
-    <String name="C_Note">C</String>
-    <String name="C_Note">Cs</String>
-    <String name="D_Note">D</String>
-    <String name="Ds_Note">Ds</String>
-    <String name="E_Note">E</String>
-    <String name="F_Note">F</String>
-    <String name="Fs_Note">Fs</String>
-    <String name="G_Note">G</String>
-    <String name="Gs_Note">Gs</String>
+    <string name="Bb_Note">Bb</string>
+    <string name="B_Note">B</string>
+    <string name="C_Note">C</string>
+    <string name="Cs_Note">Cs</string>
+    <string name="D_Note">D</string>
+    <string name="Ds_Note">Ds</string>
+    <string name="E_Note">E</string>
+    <string name="F_Note">F</string>
+    <string name="Fs_Note">Fs</string>
+    <string name="G_Note">G</string>
+    <string name="Gs_Note">Gs</string>
 
 </resources>
