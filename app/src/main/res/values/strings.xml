@@ -12,5 +12,10 @@
     <string name="Fs_Note">Fs</string>
     <string name="G_Note">G</string>
     <string name="Gs_Note">Gs</string>
+    <string name="Scale">Scale</string>
+    <string name="Start">Record</string>
+    <string name="Stop">Stop</string>
+    <string name="Play">Play</string>
+
 
 </resources>

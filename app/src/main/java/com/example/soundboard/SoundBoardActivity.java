@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,9 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
     private Button buttonF_sharp;
     private Button buttonG;
     private Button buttonG_sharp;
+    private Button buttonScale;
+    private Button buttonRecord;
+    private Button buttonPlayRecording;
     private SoundPool soundPool;
     private int soundID;
     boolean loaded = false;
@@ -45,12 +49,14 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
     private int gNote;
     private int gSharpNote;
     private Map<Integer, Integer> noteMap;
-    public Note note;
     boolean isFirstClick = true;
     long oldTime;
     long newTime;
     int currentClick;
     int oldClick;
+    ArrayList<Integer> scale = new ArrayList<Integer>();
+    private Song song;
+    private boolean isRecording = false;
 
     public static final String TAG = SoundBoardActivity.class.getSimpleName();
 
@@ -67,7 +73,7 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
                 loaded = true;
             }
         });
-        note = new Note(0,0);
+        song = new Song();
         wireWidgets();
         loadSounds();
         setListeners();
@@ -103,6 +109,13 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
         noteMap.put(buttonG.getId(), gNote);
         noteMap.put(buttonG_sharp.getId(), gSharpNote);
 
+        scale.add(aNote);
+        scale.add(bFlatNote);
+        scale.add(cNote);
+        scale.add(dNote);
+        scale.add(dSharpNote);
+        scale.add(fNote);
+        scale.add(gNote);
     }
 
     private void setListeners() {
@@ -170,9 +183,13 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
         buttonG.setOnClickListener(keyboardListener);
         buttonG_sharp.setOnClickListener(keyboardListener);
 
+
         buttonA.setOnClickListener(this);
         buttonB.setOnClickListener(this);
         buttonB_flat.setOnClickListener(this);
+        buttonScale.setOnClickListener(this);
+        buttonRecord.setOnClickListener(this);
+        buttonPlayRecording.setOnClickListener(this);
     }
 
     private void delay(int millisDelay) {
@@ -196,6 +213,10 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
         buttonF_sharp = findViewById(R.id.button_main_Fsharp);
         buttonG = findViewById(R.id.button_main_G);
         buttonG_sharp = findViewById(R.id.button_main_Gsharp);
+        buttonScale = findViewById(R.id.button_main_scale);
+        buttonPlayRecording = findViewById(R.id.button_main_playRecording);
+        buttonRecord = findViewById(R.id.button_main_startStop);
+
     }
 
     @Override
@@ -241,6 +262,50 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
                 }
                 break;
             }
+
+            case R.id.button_main_scale: {
+                AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+                float actualVolume = (float) audioManager
+                        .getStreamVolume(AudioManager.STREAM_MUSIC);
+                float maxVolume = (float) audioManager
+                        .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                float volume = actualVolume / maxVolume;
+                for(int i = 0; i < scale.size(); i ++){
+                    soundPool.play(scale.get(i), volume, volume, 1, 0, 1f);
+                    delay(500);
+                }
+                break;
+            }
+
+            case R.id.button_main_playRecording: {
+                AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+                float actualVolume = (float) audioManager
+                        .getStreamVolume(AudioManager.STREAM_MUSIC);
+                float maxVolume = (float) audioManager
+                        .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                float volume = actualVolume / maxVolume;
+
+                if(loaded){
+                    for(Note note : song.getNotes()){
+                        soundPool.play(note.getSoundID(), volume, volume, 1, 0, 1f);
+                        delay(note.getDelay());
+                    }
+                }
+
+                break;
+            }
+
+            case R.id.button_main_startStop: {
+                if(isRecording){
+                    isRecording = false;
+                    buttonRecord.setText(getString(R.string.Start));
+                }
+                else{
+                    isRecording = true;
+                    buttonRecord.setText(getString(R.string.Stop));
+
+                }
+            }
         }
     }
 
@@ -251,6 +316,7 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
             // read from my map -- looking up which button was pressed and play the associated note
             int songId = noteMap.get(view.getId());
             if (songId != 0) {
+                Note note = new Note(0,0);
                 note.setSoundID(songId);
                 newTime = SystemClock.elapsedRealtime();
                 if (isFirstClick) {
@@ -269,7 +335,11 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
                 soundPool.play(songId, 1, 1, 1, 0, 1);
                 currentClick++;
                 Log.d(TAG, "onClick: " + note.getDelay());
+                if(isRecording){
+                    song.addNote(note);
+                }
             }
+
         }
     }
 }
