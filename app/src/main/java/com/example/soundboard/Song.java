@@ -17,4 +17,10 @@ public class Song {
     public ArrayList<Note> getNotes() {
         return notes;
     }
+
+    public void clearSong(){
+        for(int i = notes.size() - 1; i >= 0; i--){
+            notes.remove(i);
+        }
+    }
 }

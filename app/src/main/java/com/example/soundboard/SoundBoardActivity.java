@@ -33,6 +33,8 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
     private Button buttonScale;
     private Button buttonRecord;
     private Button buttonPlayRecording;
+    private Button buttonResetSong;
+    private Button buttonRickRolled;
     private SoundPool soundPool;
     private int soundID;
     boolean loaded = false;
@@ -48,6 +50,7 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
     private int fSharpNote;
     private int gNote;
     private int gSharpNote;
+    private int rick_rolled;
     private Map<Integer, Integer> noteMap;
     boolean isFirstClick = true;
     long oldTime;
@@ -57,11 +60,11 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
     ArrayList<Integer> scale = new ArrayList<Integer>();
     private Song song;
     private boolean isRecording = false;
+    private boolean isFirstNote = true;
 
     public static final String TAG = SoundBoardActivity.class.getSimpleName();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sound_board);
 
@@ -93,6 +96,7 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
         fSharpNote = soundPool.load(this, R.raw.scalefs, 1);
         gNote = soundPool.load(this, R.raw.scaleg, 1);
         gSharpNote = soundPool.load(this, R.raw.scalegs, 1);
+        rick_rolled = gSharpNote = soundPool.load(this, R.raw.rick_rolled, 1);
 
 
         noteMap = new HashMap<>();
@@ -108,6 +112,7 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
         noteMap.put(buttonF_sharp.getId(), fSharpNote);
         noteMap.put(buttonG.getId(), gNote);
         noteMap.put(buttonG_sharp.getId(), gSharpNote);
+        noteMap.put(buttonRickRolled.getId(), rick_rolled);
 
         scale.add(aNote);
         scale.add(bFlatNote);
@@ -182,14 +187,12 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
         buttonF_sharp.setOnClickListener(keyboardListener);
         buttonG.setOnClickListener(keyboardListener);
         buttonG_sharp.setOnClickListener(keyboardListener);
+        buttonRickRolled.setOnClickListener(keyboardListener);
 
-
-        buttonA.setOnClickListener(this);
-        buttonB.setOnClickListener(this);
-        buttonB_flat.setOnClickListener(this);
         buttonScale.setOnClickListener(this);
         buttonRecord.setOnClickListener(this);
         buttonPlayRecording.setOnClickListener(this);
+        buttonResetSong.setOnClickListener(this);
     }
 
     private void delay(int millisDelay) {
@@ -216,6 +219,8 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
         buttonScale = findViewById(R.id.button_main_scale);
         buttonPlayRecording = findViewById(R.id.button_main_playRecording);
         buttonRecord = findViewById(R.id.button_main_startStop);
+        buttonResetSong = findViewById(R.id.button_main_resetSong);
+        buttonRickRolled = findViewById(R.id.button_main_funButton);
 
     }
 
@@ -287,10 +292,19 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
 
                 if(loaded){
                     for(Note note : song.getNotes()){
+                        if(!isFirstNote){
+                            delay(note.getDelay());
+                        }
                         soundPool.play(note.getSoundID(), volume, volume, 1, 0, 1f);
-                        delay(note.getDelay());
+                        isFirstNote = false;
                     }
                 }
+
+                break;
+            }
+
+            case R.id.button_main_resetSong: {
+                song.clearSong();
 
                 break;
             }
@@ -303,8 +317,10 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
                 else{
                     isRecording = true;
                     buttonRecord.setText(getString(R.string.Stop));
-
+                    oldTime = SystemClock.elapsedRealtime();
+                    isFirstNote = true;
                 }
+                break;
             }
         }
     }
@@ -338,7 +354,9 @@ public class SoundBoardActivity extends AppCompatActivity implements View.OnClic
                 if(isRecording){
                     song.addNote(note);
                 }
+
             }
+
 
         }
     }
